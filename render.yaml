@@ -1,67 +1,44 @@
 services:
-  - name: deep-guard-backend
+  deep-guard-backend:
     type: web
-    env: docker
-    rootDir: Deep-Guard-Backend
-    dockerfilePath: Dockerfile
-    repo: https://github.com/salianDheeraj/Deep-Guard-Integrated-Backend.git
-    autoDeploy: true
-    repoSubmodules: true
-    repoSubmodulesDepth: recursive
-    ports:
-      - port: 5000
-        protocol: tcp
+    plan: starter
+    build:
+      type: docker
+      dockerfilePath: Deep-Guard-Backend/Dockerfile
+      context: .
     envVars:
-      - key: PORT
-        value: "{{PORT}}"
-      - key: SUPABASE_URL
-        value: "{{SUPABASE_URL}}"
-      - key: SUPABASE_ANON_KEY
-        value: "{{SUPABASE_ANON_KEY}}"
-      - key: NODE_ENV
-        value: "{{NODE_ENV}}"
-      - key: JWT_SECRET
-        value: "{{JWT_SECRET}}"
-      - key: SUPABASE_BUCKET_NAME
-        value: "{{SUPABASE_BUCKET_NAME}}"
-      - key: JWT_REFRESH_SECRET
-        value: "{{JWT_REFRESH_SECRET}}"
-      - key: GOOGLE_CLIENT_ID
-        value: "{{GOOGLE_CLIENT_ID}}"
-      - key: OPENAI_API_KEY
-        value: "{{OPENAI_API_KEY}}"
-      - key: SERVICE_ROLE_KEY
-        value: "{{SERVICE_ROLE_KEY}}"
-      - key: FRONTEND_URL
-        value: "{{FRONTEND_URL}}"
-      - key: ML_API_URL
-        value: "{{ML_API_URL}}"
-      - key: ML_VIDEO_URL
-        value: "{{ML_VIDEO_URL}}"
-      - key: ML_IMAGE_URL
-        value: "{{ML_IMAGE_URL}}"
-      - key: client_SECRET
-        value: "{{client_SECRET}}"
-      - key: EMAIL_USER
-        value: "{{EMAIL_USER}}"
-      - key: EMAIL_PASSWORD
-        value: "{{EMAIL_PASSWORD}}"
-      - key: SMTP_HOST
-        value: "{{SMTP_HOST}}"
-      - key: SMTP_PORT
-        value: "{{SMTP_PORT}}"
-      - key: ENABLE_CSRF_CHECK
-        value: "{{ENABLE_CSRF_CHECK}}"
+      PORT: 5000
+      SUPABASE_URL: "{{SUPABASE_URL}}"
+      SUPABASE_ANON_KEY: "{{SUPABASE_ANON_KEY}}"
+      NODE_ENV: "{{NODE_ENV}}"
+      JWT_SECRET: "{{JWT_SECRET}}"
+      SUPABASE_BUCKET_NAME: "{{SUPABASE_BUCKET_NAME}}"
+      JWT_REFRESH_SECRET: "{{JWT_REFRESH_SECRET}}"
+      GOOGLE_CLIENT_ID: "{{GOOGLE_CLIENT_ID}}"
+      OPENAI_API_KEY: "{{OPENAI_API_KEY}}"
+      SERVICE_ROLE_KEY: "{{SERVICE_ROLE_KEY}}"
+      FRONTEND_URL: "{{FRONTEND_URL}}"
+      ML_API_URL: "http://deep-guard-ml-engine:8000"
+      ML_VIDEO_URL: "http://deep-guard-ml-engine:8000/detect/deepfake/video"
+      ML_IMAGE_URL: "http://deep-guard-ml-engine:8000/detect/deepfake/images"
+      client_SECRET: "{{client_SECRET}}"
+      EMAIL_USER: "{{EMAIL_USER}}"
+      EMAIL_PASSWORD: "{{EMAIL_PASSWORD}}"
+      SMTP_HOST: "{{SMTP_HOST}}"
+      SMTP_PORT: "{{SMTP_PORT}}"
+      ENABLE_CSRF_CHECK: "{{ENABLE_CSRF_CHECK}}"
 
-  - name: deep-guard-ml-engine
-    type: worker
-    env: docker
-    rootDir: Deep-Guard-ML-Engine
-    dockerfilePath: Dockerfile
-    repo: https://github.com/salianDheeraj/Deep-Guard-Integrated-Backend.git
-    autoDeploy: true
-    repoSubmodules: true
-    repoSubmodulesDepth: recursive
-    ports:
-      - port: 8000
-        protocol: tcp
+  deep-guard-ml-engine:
+    type: web
+    plan: starter
+    build:
+      type: docker
+      dockerfilePath: Deep-Guard-ML-Engine/Dockerfile
+      context: .
+    envVars:
+      PORT: 8000
+
+    # ❗ Make ML Engine PRIVATE
+    privateNetwork: true
+    routes:
+      - type: private
