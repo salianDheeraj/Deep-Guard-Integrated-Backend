@@ -2,15 +2,14 @@ services:
   # 1. deep-guard-backend (The Public API)
   - name: deep-guard-backend
     type: web
-    plan: starter
+    plan: free # ✅ Free Plan
     
-    # FIX: Use 'runtime: docker' and specify paths directly under the service
     runtime: docker 
-    dockerContext: . # This corresponds to your old 'context: .'
-    dockerfilePath: Deep-Guard-Backend/Dockerfile
+    dockerContext: ./Deep-Guard-Backend
+    dockerfilePath: Dockerfile
       
     envVars:
-      # All environment variables listed as secure placeholders (sync: false)
+      # All environment variables are set as secure placeholders (sync: false)
       - key: PORT
         sync: false
       - key: SUPABASE_URL
@@ -34,11 +33,11 @@ services:
       - key: FRONTEND_URL
         sync: false
       - key: ML_API_URL
-        sync: false
+        value: "http://deep-guard-ml-engine:8000"
       - key: ML_VIDEO_URL
-        sync: false
+        value: "http://deep-guard-ml-engine:8000"
       - key: ML_IMAGE_URL
-        sync: false
+        value: "http://deep-guard-ml-engine:8000"
       - key: client_SECRET
         sync: false
       - key: EMAIL_USER
@@ -52,24 +51,17 @@ services:
       - key: ENABLE_CSRF_CHECK
         sync: false
 
----
 
-  # 2. deep-guard-ml-engine (The Internal Worker)
+  # 2. deep-guard-ml-engine (The Inference API)
   - name: deep-guard-ml-engine
-    # FIX: Use 'pserv' (Private Service)
-    type: pserv 
-    plan: starter
+    type: web # ✅ Changed from pserv for Free Plan eligibility
+    plan: free # ✅ Free Plan
     
-    # REMOVED: 'privateNetwork: true' is not a valid field.
-    # The 'pserv' type already makes it private.
-    routes:
-      - type: private
-        
-    # FIX: Use 'runtime: docker' and specify paths directly under the service
     runtime: docker
-    dockerContext: .
-    dockerfilePath: Deep-Guard-ML-Engine/Dockerfile
+    dockerContext: ./Deep-Guard-ML-Engine
+    dockerfilePath: Dockerfile
       
     envVars:
+      # Since it's a web service, the port can be a placeholder or hardcoded.
       - key: PORT
-        sync: false
+        value: "8000"
