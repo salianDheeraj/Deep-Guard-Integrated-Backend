@@ -2,11 +2,11 @@ services:
   # 1. deep-guard-backend (The Public API)
   - name: deep-guard-backend
     type: web
-    plan: free # ✅ Free Plan
+    plan: free 
     
     runtime: docker 
-    dockerContext: ./Deep-Guard-Backend
-    dockerfilePath: Dockerfile
+    dockerContext: . # Set context to the root of the repository
+    dockerfilePath: Deep-Guard-Backend/Dockerfile # Full path from root
       
     envVars:
       # All environment variables are set as secure placeholders (sync: false)
@@ -54,12 +54,12 @@ services:
 
   # 2. deep-guard-ml-engine (The Inference API)
   - name: deep-guard-ml-engine
-    type: web # ✅ Changed from pserv for Free Plan eligibility
-    plan: free # ✅ Free Plan
+    type: web
+    plan: free 
     
     runtime: docker
-    dockerContext: ./Deep-Guard-ML-Engine
-    dockerfilePath: Dockerfile
+    dockerContext: . # Set context to the root of the repository
+    dockerfilePath: Deep-Guard-ML-Engine/Dockerfile # Full path from root
       
     envVars:
       # Since it's a web service, the port can be a placeholder or hardcoded.
