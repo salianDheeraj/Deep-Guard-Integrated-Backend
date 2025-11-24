@@ -4,7 +4,7 @@ services:
     env: docker
     rootDir: Deep-Guard-Backend
     dockerfilePath: Dockerfile
-    repo: https://github.com/salianDheeraj/Deep-Guard-Integrated-Backend
+    repo: https://github.com/salianDheeraj/Deep-Guard-Integrated-Backend.git
     autoDeploy: true
     repoSubmodules: true
     repoSubmodulesDepth: recursive
@@ -58,7 +58,7 @@ services:
     env: docker
     rootDir: Deep-Guard-ML-Engine
     dockerfilePath: Dockerfile
-    repo: https://github.com/salianDheeraj/Deep-Guard-Integrated-Backend
+    repo: https://github.com/salianDheeraj/Deep-Guard-Integrated-Backend.git
     autoDeploy: true
     repoSubmodules: true
     repoSubmodulesDepth: recursive
