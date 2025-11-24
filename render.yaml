@@ -1,0 +1,25 @@
+services:
+  - name: deep-guard-backend
+    type: web
+    env: docker
+    repo: .
+    dockerfilePath: Deep-Guard-Backend/Dockerfile
+    autoDeploy: true
+    ports:
+      - port: 5000
+        protocol: tcp
+    envVars:
+      - key: ML_ENGINE_URL
+        value: http://deep-guard-ml-engine:8000
+      - key: ML_API_URL
+        value: http://deep-guard-ml-engine:8000
+
+  - name: deep-guard-ml-engine
+    type: private_service
+    env: docker
+    repo: .
+    dockerfilePath: Deep-Guard-ML-Engine/Dockerfile
+    autoDeploy: true
+    ports:
+      - port: 8000
+        protocol: tcp

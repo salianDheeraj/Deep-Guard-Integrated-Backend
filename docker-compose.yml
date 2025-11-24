@@ -1,0 +1,19 @@
+services:
+  deep-guard-backend:
+    build:
+      context: ./Deep-Guard-Backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      ML_ENGINE_URL: "http://deep-guard-ml-engine:8000"
+      ML_API_URL: "http://deep-guard-ml-engine:8000"
+    depends_on:
+      - deep-guard-ml-engine
+
+  deep-guard-ml-engine:
+    build:
+      context: ./Deep-Guard-ML-Engine
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
