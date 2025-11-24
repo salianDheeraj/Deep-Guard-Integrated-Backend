@@ -4,8 +4,8 @@ services:
     env: docker
     rootDir: Deep-Guard-Backend
     dockerfilePath: Dockerfile
+    repo: https://github.com/salianDheeraj/Deep-Guard-Integrated-Backend
     autoDeploy: true
-    repo: .
     repoSubmodules: true
     repoSubmodulesDepth: recursive
     ports:
@@ -15,51 +15,51 @@ services:
       - key: PORT
         value: "5000"
       - key: SUPABASE_URL
-        value: "${SUPABASE_URL}"
+        value: ""   # Set these in Render dashboard
       - key: SUPABASE_ANON_KEY
-        value: "${SUPABASE_ANON_KEY}"
+        value: ""
       - key: NODE_ENV
         value: "development"
       - key: JWT_SECRET
-        value: "${JWT_SECRET}"
+        value: ""
       - key: SUPABASE_BUCKET_NAME
-        value: "${SUPABASE_BUCKET_NAME}"
+        value: ""
       - key: JWT_REFRESH_SECRET
-        value: "${JWT_REFRESH_SECRET}"
+        value: ""
       - key: GOOGLE_CLIENT_ID
-        value: "${GOOGLE_CLIENT_ID}"
+        value: ""
       - key: OPENAI_API_KEY
-        value: "${OPENAI_API_KEY}"
+        value: ""
       - key: SERVICE_ROLE_KEY
-        value: "${SERVICE_ROLE_KEY}"
+        value: ""
       - key: FRONTEND_URL
-        value: "${FRONTEND_URL}"
+        value: ""
       - key: ML_API_URL
-        value: "${ML_API_URL}"
+        value: ""
       - key: ML_VIDEO_URL
-        value: "${ML_VIDEO_URL}"
+        value: ""
       - key: ML_IMAGE_URL
-        value: "${ML_IMAGE_URL}"
+        value: ""
       - key: CLIENT_SECRET
-        value: "${CLIENT_SECRET}"
+        value: ""
       - key: EMAIL_USER
-        value: "${EMAIL_USER}"
+        value: ""
       - key: EMAIL_PASSWORD
-        value: "${EMAIL_PASSWORD}"
+        value: ""
       - key: SMTP_HOST
-        value: "${SMTP_HOST}"
+        value: ""
       - key: SMTP_PORT
-        value: "${SMTP_PORT}"
+        value: ""
       - key: ENABLE_CSRF_CHECK
-        value: "${ENABLE_CSRF_CHECK}"
+        value: ""
 
   - name: deep-guard-ml-engine
     type: private_service
     env: docker
     rootDir: Deep-Guard-ML-Engine
     dockerfilePath: Dockerfile
+    repo: https://github.com/salianDheeraj/Deep-Guard-Integrated-Backend
     autoDeploy: true
-    repo: .
     repoSubmodules: true
     repoSubmodulesDepth: recursive
     ports:
