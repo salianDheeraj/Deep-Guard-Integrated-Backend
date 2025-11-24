@@ -1,42 +1,70 @@
 services:
+  # 1. deep-guard-backend (The Public API)
   - name: deep-guard-backend
     type: web
     plan: starter
+    
     build:
       type: docker
       context: .
       dockerfilePath: Deep-Guard-Backend/Dockerfile
-    envVars:
-      PORT: 5000
-      SUPABASE_URL: "{{SUPABASE_URL}}"
-      SUPABASE_ANON_KEY: "{{SUPABASE_ANON_KEY}}"
-      NODE_ENV: "{{NODE_ENV}}"
-      JWT_SECRET: "{{JWT_SECRET}}"
-      SUPABASE_BUCKET_NAME: "{{SUPABASE_BUCKET_NAME}}"
-      JWT_REFRESH_SECRET: "{{JWT_REFRESH_SECRET}}"
-      GOOGLE_CLIENT_ID: "{{GOOGLE_CLIENT_ID}}"
-      OPENAI_API_KEY: "{{OPENAI_API_KEY}}"
-      SERVICE_ROLE_KEY: "{{SERVICE_ROLE_KEY}}"
-      FRONTEND_URL: "{{FRONTEND_URL}}"
-      ML_API_URL: "http://deep-guard-ml-engine:8000"
-      ML_VIDEO_URL: "http://deep-guard-ml-engine:8000/detect/deepfake/video"
-      ML_IMAGE_URL: "http://deep-guard-ml-engine:8000/detect/deepfake/images"
-      client_SECRET: "{{client_SECRET}}"
-      EMAIL_USER: "{{EMAIL_USER}}"
-      EMAIL_PASSWORD: "{{EMAIL_PASSWORD}}"
-      SMTP_HOST: "{{SMTP_HOST}}"
-      SMTP_PORT: "{{SMTP_PORT}}"
-      ENABLE_CSRF_CHECK: "{{ENABLE_CSRF_CHECK}}"
 
+    # Every required variable is listed as a placeholder (sync: false)
+    envVars:
+      - key: PORT
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: NODE_ENV
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: SUPABASE_BUCKET_NAME
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: SERVICE_ROLE_KEY
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: ML_API_URL
+        sync: false
+      - key: ML_VIDEO_URL
+        sync: false
+      - key: ML_IMAGE_URL
+        sync: false
+      - key: client_SECRET # You still need to rename this, but it's a placeholder now
+        sync: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASSWORD
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: ENABLE_CSRF_CHECK
+        sync: false
+
+  # 2. deep-guard-ml-engine (The Internal Worker)
   - name: deep-guard-ml-engine
     type: web
     plan: starter
     privateNetwork: true
     routes:
       - type: private
+        
     build:
       type: docker
       context: .
       dockerfilePath: Deep-Guard-ML-Engine/Dockerfile
+      
     envVars:
-      PORT: 8000
+      - key: PORT
+        sync: false # Even the port is a placeholder now
