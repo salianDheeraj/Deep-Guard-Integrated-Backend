@@ -11,10 +11,47 @@ services:
       - port: 5000
         protocol: tcp
     envVars:
-      - key: ML_ENGINE_URL
-        value: http://deep-guard-ml-engine:8000
+      - key: PORT
+        value: "5000"
+      - key: SUPABASE_URL
+        value: "${SUPABASE_URL}"
+      - key: SUPABASE_ANON_KEY
+        value: "${SUPABASE_ANON_KEY}"
+      - key: NODE_ENV
+        value: "development"
+      - key: JWT_SECRET
+        value: "${JWT_SECRET}"
+      - key: SUPABASE_BUCKET_NAME
+        value: "${SUPABASE_BUCKET_NAME}"
+      - key: JWT_REFRESH_SECRET
+        value: "${JWT_REFRESH_SECRET}"
+      - key: GOOGLE_CLIENT_ID
+        value: "${GOOGLE_CLIENT_ID}"
+      - key: OPENAI_API_KEY
+        value: "${OPENAI_API_KEY}"
+      - key: SERVICE_ROLE_KEY
+        value: "${SERVICE_ROLE_KEY}"
+      - key: FRONTEND_URL
+        value: "${FRONTEND_URL}"
       - key: ML_API_URL
-        value: http://deep-guard-ml-engine:8000
+        value: "${ML_API_URL}"
+      - key: ML_VIDEO_URL
+        value: "${ML_VIDEO_URL}"
+      - key: ML_IMAGE_URL
+        value: "${ML_IMAGE_URL}"
+      - key: CLIENT_SECRET
+        value: "${CLIENT_SECRET}"
+      - key: EMAIL_USER
+        value: "${EMAIL_USER}"
+      - key: EMAIL_PASSWORD
+        value: "${EMAIL_PASSWORD}"
+      - key: SMTP_HOST
+        value: "${SMTP_HOST}"
+      - key: SMTP_PORT
+        value: "${SMTP_PORT}"
+      - key: ENABLE_CSRF_CHECK
+        value: "${ENABLE_CSRF_CHECK}"
+
 
   - name: deep-guard-ml-engine
     type: private_service

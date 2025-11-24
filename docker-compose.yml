@@ -6,10 +6,30 @@ services:
     ports:
       - "5000:5000"
     environment:
-      ML_ENGINE_URL: "http://deep-guard-ml-engine:8000"
+      PORT: "5000"
+      SUPABASE_URL: "${SUPABASE_URL}"
+      SUPABASE_ANON_KEY: "${SUPABASE_ANON_KEY}"
+      NODE_ENV: "development"
+      JWT_SECRET: "${JWT_SECRET}"
+      SUPABASE_BUCKET_NAME: "${SUPABASE_BUCKET_NAME}"
+      JWT_REFRESH_SECRET: "${JWT_REFRESH_SECRET}"
+      GOOGLE_CLIENT_ID: "${GOOGLE_CLIENT_ID}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY}"
+      SERVICE_ROLE_KEY: "${SERVICE_ROLE_KEY}"
+      FRONTEND_URL: "${FRONTEND_URL}"
       ML_API_URL: "http://deep-guard-ml-engine:8000"
+      ML_VIDEO_URL: "http://deep-guard-ml-engine:8000"
+      ML_IMAGE_URL: "http://deep-guard-ml-engine:8000"
+      client_SECRET: "${client_SECRET}"
+      EMAIL_USER: "${EMAIL_USER}"
+      EMAIL_PASSWORD: "${EMAIL_PASSWORD}"
+      SMTP_HOST: "${SMTP_HOST}"
+      SMTP_PORT: "${SMTP_PORT}"
+      ENABLE_CSRF_CHECK: "${ENABLE_CSRF_CHECK}"
     depends_on:
       - deep-guard-ml-engine
+    networks:
+      - internal
 
   deep-guard-ml-engine:
     build:
@@ -17,3 +37,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
