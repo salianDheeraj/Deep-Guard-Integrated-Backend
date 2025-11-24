@@ -2,11 +2,12 @@ services:
   - name: deep-guard-backend
     type: web
     env: docker
+    rootDir: Deep-Guard-Backend
+    dockerfilePath: Dockerfile
+    autoDeploy: true
     repo: .
     repoSubmodules: true
     repoSubmodulesDepth: recursive
-    dockerfilePath: Deep-Guard-Backend/Dockerfile
-    autoDeploy: true
     ports:
       - port: 5000
         protocol: tcp
@@ -52,15 +53,15 @@ services:
       - key: ENABLE_CSRF_CHECK
         value: "${ENABLE_CSRF_CHECK}"
 
-
   - name: deep-guard-ml-engine
     type: private_service
     env: docker
+    rootDir: Deep-Guard-ML-Engine
+    dockerfilePath: Dockerfile
+    autoDeploy: true
     repo: .
     repoSubmodules: true
     repoSubmodulesDepth: recursive
-    dockerfilePath: Deep-Guard-ML-Engine/Dockerfile
-    autoDeploy: true
     ports:
       - port: 8000
         protocol: tcp
