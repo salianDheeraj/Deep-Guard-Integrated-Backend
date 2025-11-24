@@ -3,6 +3,8 @@ services:
     type: web
     env: docker
     repo: .
+    repoSubmodules: true
+    repoSubmodulesDepth: recursive
     dockerfilePath: Deep-Guard-Backend/Dockerfile
     autoDeploy: true
     ports:
@@ -18,6 +20,8 @@ services:
     type: private_service
     env: docker
     repo: .
+    repoSubmodules: true
+    repoSubmodulesDepth: recursive
     dockerfilePath: Deep-Guard-ML-Engine/Dockerfile
     autoDeploy: true
     ports:
