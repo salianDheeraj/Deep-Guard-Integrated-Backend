@@ -8,9 +8,9 @@ services:
       type: docker
       context: .
       dockerfilePath: Deep-Guard-Backend/Dockerfile
-
-    # Every required variable is listed as a placeholder (sync: false)
+      
     envVars:
+      # Every required variable is listed as a placeholder (sync: false)
       - key: PORT
         sync: false
       - key: SUPABASE_URL
@@ -39,7 +39,7 @@ services:
         sync: false
       - key: ML_IMAGE_URL
         sync: false
-      - key: client_SECRET # You still need to rename this, but it's a placeholder now
+      - key: client_SECRET
         sync: false
       - key: EMAIL_USER
         sync: false
@@ -51,6 +51,8 @@ services:
         sync: false
       - key: ENABLE_CSRF_CHECK
         sync: false
+
+---
 
   # 2. deep-guard-ml-engine (The Internal Worker)
   - name: deep-guard-ml-engine
@@ -67,4 +69,4 @@ services:
       
     envVars:
       - key: PORT
-        sync: false # Even the port is a placeholder now
+        sync: false
