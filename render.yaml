@@ -13,48 +13,48 @@ services:
         protocol: tcp
     envVars:
       - key: PORT
-        value: "5000"
+        value: "{{PORT}}"
       - key: SUPABASE_URL
-        value: ""   # Set these in Render dashboard
+        value: "{{SUPABASE_URL}}"
       - key: SUPABASE_ANON_KEY
-        value: ""
+        value: "{{SUPABASE_ANON_KEY}}"
       - key: NODE_ENV
-        value: "development"
+        value: "{{NODE_ENV}}"
       - key: JWT_SECRET
-        value: ""
+        value: "{{JWT_SECRET}}"
       - key: SUPABASE_BUCKET_NAME
-        value: ""
+        value: "{{SUPABASE_BUCKET_NAME}}"
       - key: JWT_REFRESH_SECRET
-        value: ""
+        value: "{{JWT_REFRESH_SECRET}}"
       - key: GOOGLE_CLIENT_ID
-        value: ""
+        value: "{{GOOGLE_CLIENT_ID}}"
       - key: OPENAI_API_KEY
-        value: ""
+        value: "{{OPENAI_API_KEY}}"
       - key: SERVICE_ROLE_KEY
-        value: ""
+        value: "{{SERVICE_ROLE_KEY}}"
       - key: FRONTEND_URL
-        value: ""
+        value: "{{FRONTEND_URL}}"
       - key: ML_API_URL
-        value: ""
+        value: "{{ML_API_URL}}"
       - key: ML_VIDEO_URL
-        value: ""
+        value: "{{ML_VIDEO_URL}}"
       - key: ML_IMAGE_URL
-        value: ""
-      - key: CLIENT_SECRET
-        value: ""
+        value: "{{ML_IMAGE_URL}}"
+      - key: client_SECRET
+        value: "{{client_SECRET}}"
       - key: EMAIL_USER
-        value: ""
+        value: "{{EMAIL_USER}}"
       - key: EMAIL_PASSWORD
-        value: ""
+        value: "{{EMAIL_PASSWORD}}"
       - key: SMTP_HOST
-        value: ""
+        value: "{{SMTP_HOST}}"
       - key: SMTP_PORT
-        value: ""
+        value: "{{SMTP_PORT}}"
       - key: ENABLE_CSRF_CHECK
-        value: ""
+        value: "{{ENABLE_CSRF_CHECK}}"
 
   - name: deep-guard-ml-engine
-    type: private_service
+    type: worker
     env: docker
     rootDir: Deep-Guard-ML-Engine
     dockerfilePath: Dockerfile
