@@ -1,3 +1,9 @@
 [submodule "Deep-Guard-Integrated-Backend"]
 	path = Deep-Guard-Integrated-Backend
 	url = https://github.com/salianDheeraj/Deep-Guard-Integrated-Backend.git
+[submodule "Deep-Guard-Backend"]
+	path = Deep-Guard-Backend
+	url = https://github.com/salianDheeraj/Deep-Guard-Backend.git
+[submodule "Deep-Guard-ML-Engine"]
+	path = Deep-Guard-ML-Engine
+	url = https://github.com/salianDheeraj/Deep-Guard-ML-Engine.git
