@@ -1,11 +1,11 @@
 services:
-  deep-guard-backend:
+  - name: deep-guard-backend
     type: web
     plan: starter
     build:
       type: docker
-      dockerfilePath: Deep-Guard-Backend/Dockerfile
       context: .
+      dockerfilePath: Deep-Guard-Backend/Dockerfile
     envVars:
       PORT: 5000
       SUPABASE_URL: "{{SUPABASE_URL}}"
@@ -28,17 +28,15 @@ services:
       SMTP_PORT: "{{SMTP_PORT}}"
       ENABLE_CSRF_CHECK: "{{ENABLE_CSRF_CHECK}}"
 
-  deep-guard-ml-engine:
+  - name: deep-guard-ml-engine
     type: web
     plan: starter
-    build:
-      type: docker
-      dockerfilePath: Deep-Guard-ML-Engine/Dockerfile
-      context: .
-    envVars:
-      PORT: 8000
-
-    # ❗ Make ML Engine PRIVATE
     privateNetwork: true
     routes:
       - type: private
+    build:
+      type: docker
+      context: .
+      dockerfilePath: Deep-Guard-ML-Engine/Dockerfile
+    envVars:
+      PORT: 8000
