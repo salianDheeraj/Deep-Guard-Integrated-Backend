@@ -4,13 +4,13 @@ services:
     type: web
     plan: starter
     
-    build:
-      type: docker
-      context: .
-      dockerfilePath: Deep-Guard-Backend/Dockerfile
+    # FIX: Use 'runtime: docker' and specify paths directly under the service
+    runtime: docker 
+    dockerContext: . # This corresponds to your old 'context: .'
+    dockerfilePath: Deep-Guard-Backend/Dockerfile
       
     envVars:
-      # Every required variable is listed as a placeholder (sync: false)
+      # All environment variables listed as secure placeholders (sync: false)
       - key: PORT
         sync: false
       - key: SUPABASE_URL
@@ -56,16 +56,19 @@ services:
 
   # 2. deep-guard-ml-engine (The Internal Worker)
   - name: deep-guard-ml-engine
-    type: web
+    # FIX: Use 'pserv' (Private Service)
+    type: pserv 
     plan: starter
-    privateNetwork: true
+    
+    # REMOVED: 'privateNetwork: true' is not a valid field.
+    # The 'pserv' type already makes it private.
     routes:
       - type: private
         
-    build:
-      type: docker
-      context: .
-      dockerfilePath: Deep-Guard-ML-Engine/Dockerfile
+    # FIX: Use 'runtime: docker' and specify paths directly under the service
+    runtime: docker
+    dockerContext: .
+    dockerfilePath: Deep-Guard-ML-Engine/Dockerfile
       
     envVars:
       - key: PORT
