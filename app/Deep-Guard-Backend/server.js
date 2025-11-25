@@ -21,8 +21,10 @@ const app = express();
 /* ------------------ GLOBAL MIDDLEWARE ------------------ */
 app.use(
   cors({
-    origin: "http://localhost:3000",
-    origin: "https://deep-guard-frontend-omega.vercel.app/",
+    origin: [
+      "http://localhost:3000",
+      "https://deep-guard-frontend-omega.vercel.app"
+    ],
     credentials: true,
   })
 );
