@@ -7,7 +7,7 @@ const crypto = require("crypto");
 const COOKIE_OPTS = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
-  sameSite: "lax",
+  sameSite: "none",
   path: "/",
 };
 

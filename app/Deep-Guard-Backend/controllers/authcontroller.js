@@ -14,7 +14,7 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const COOKIE_OPTS = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
-  sameSite: "lax",
+  sameSite: "none",
   path: "/"
 };
 
@@ -50,14 +50,14 @@ const setAuthCookies = (res, access, refresh) => {
 const clearAuthCookies = (res) => {
   res.clearCookie("accessToken", {
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: "none",
     secure: process.env.NODE_ENV === "production",
     path: "/",
   });
 
   res.clearCookie("refreshToken", {
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: "none",
     secure: process.env.NODE_ENV === "production",
     path: "/",
   });
