@@ -33,11 +33,11 @@ services:
       - key: FRONTEND_URL
         sync: false
       - key: ML_API_URL
-        value: "http://deep-guard-ml-engine:8000"
+        value: "https://deep-guard-ml-engine.onrender.com"
       - key: ML_VIDEO_URL
-        value: "http://deep-guard-ml-engine:8000"
+        value: "https://deep-guard-ml-engine.onrender.com"
       - key: ML_IMAGE_URL
-        value: "http://deep-guard-ml-engine:8000"
+        value: "https://deep-guard-ml-engine.onrender.com"
       - key: client_SECRET
         sync: false
       - key: EMAIL_USER
