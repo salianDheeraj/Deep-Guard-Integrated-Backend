@@ -6,7 +6,7 @@ services:
     
     runtime: docker 
     dockerContext: ./Deep-Guard-Backend
-    dockerfilePath: Dockerfile
+    dockerfilePath: Deep-Guard-Backend/Dockerfile
       
     envVars:
       # All environment variables are set as secure placeholders (sync: false)
@@ -59,7 +59,7 @@ services:
     
     runtime: docker
     dockerContext: ./Deep-Guard-ML-Engine
-    dockerfilePath: Dockerfile
+    dockerfilePath: Deep-Guard-ML-Engine/Dockerfile
       
     envVars:
       # Since it's a web service, the port can be a placeholder or hardcoded.
