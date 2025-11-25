@@ -5,8 +5,8 @@ services:
     plan: free 
     
     runtime: docker 
-    dockerContext: . # Set context to the root of the repository
-    dockerfilePath: Deep-Guard-Backend/Dockerfile # Full path from root
+    dockerContext: ./Deep-Guard-Backend
+    dockerfilePath: Dockerfile
       
     envVars:
       # All environment variables are set as secure placeholders (sync: false)
@@ -58,8 +58,8 @@ services:
     plan: free 
     
     runtime: docker
-    dockerContext: . # Set context to the root of the repository
-    dockerfilePath: Deep-Guard-ML-Engine/Dockerfile # Full path from root
+    dockerContext: ./Deep-Guard-ML-Engine
+    dockerfilePath: Dockerfile
       
     envVars:
       # Since it's a web service, the port can be a placeholder or hardcoded.
