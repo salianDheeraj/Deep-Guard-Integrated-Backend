@@ -1,18 +1,12 @@
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { supabase } = require("../config/supabase");
+const { COOKIE_OPTS } = require("../utils/authHelpers");
 
 const TRIAL_DURATION_MS = 60 * 60 * 1000; // 1 hour
 const MAX_SESSIONS_PER_DAY = 100;
 const JWT_SECRET = process.env.JWT_SECRET;
 const COOKIE_NAME = "trialAccess";
-
-const COOKIE_OPTS = {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none", // User requested setting
-    path: "/",
-};
 
 // -----------------------------------------
 // Fingerprint (binds trial to device)
@@ -81,7 +75,11 @@ exports.joinTrial = async (req, res) => {
             expiresIn: "1h",
         });
 
-        // 4. Set Cookie & Respond
+        // 4. Clear standard auth cookies to prevent session override
+        res.clearCookie("accessToken", COOKIE_OPTS);
+        res.clearCookie("refreshToken", COOKIE_OPTS);
+
+        // 5. Set Cookie & Respond
         res.cookie(COOKIE_NAME, token, {
             ...COOKIE_OPTS,
             maxAge: TRIAL_DURATION_MS,

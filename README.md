@@ -2,7 +2,7 @@
 
 Welcome to the **Deep-Guard Integrated Backend** configuration engine. This folder serves as the central hub for local multi-service orchestration and containerized production deployment templates for the core backend microservices.
 
-By utilizing **Docker Compose**, this orchestrator seamlessly bridges:
+By utilizing a unified **Dockerfile**, this orchestrator seamlessly bridges:
 1. **`Deep-Guard-Backend`**: The core API service (Node.js & Express).
 2. **`Deep-Guard-ML-Engine`**: The high-performance AI/ML inference service (FastAPI & TensorFlow Lite).
 
@@ -27,7 +27,6 @@ graph TD
 
 ### Prerequisites
 - [Docker](https://www.docker.com/products/docker-desktop/) installed on your machine.
-- [Docker Compose](https://docs.docker.com/compose/) v2+.
 
 ### 1. Environment Variable Setup
 Ensure you have a `.env` file present in the `Deep-Guard-Integrated-Backend` root directory with the following variables configured:
@@ -56,15 +55,19 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 ```
 
-### 2. Launch the Orchestrated Stack
-From this directory, spin up all containers:
+### 2. Launch the Unified Container
+From this directory, build and run the unified container:
 
 ```bash
-docker compose up --build
+# Build the unified image
+docker build -t deep-guard-integrated-backend -f Dockerfile .
+
+# Run the unified container with environment variables
+docker run -d -p 5000:5000 -p 8000:8000 --env-file app/Deep-Guard-Backend/.env --name deep-guard-api deep-guard-integrated-backend
 ```
 
 - 🚀 **Core Backend API** is reachable at [http://localhost:5000](http://localhost:5000)
-- 🧠 **ML Engine Microservice** runs internally in the Docker network at `http://deep-guard-ml-engine:8000` (Port `8000` is also mapped locally for testing, allowing you to access Swagger/OpenAPI docs at [http://localhost:8000/docs](http://localhost:8000/docs)).
+- 🧠 **ML Engine Microservice** is reachable at [http://localhost:8000](http://localhost:8000) (access Swagger/OpenAPI docs at [http://localhost:8000/docs](http://localhost:8000/docs)).
 
 ---
 

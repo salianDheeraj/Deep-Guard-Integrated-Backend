@@ -1,78 +1,19 @@
 // controllers/authcontroller.js
+require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const { OAuth2Client } = require("google-auth-library");
 const { supabase } = require("../config/supabase");
+const {
+  hashToken,
+  createAccessToken,
+  createRefreshToken,
+  setAuthCookies,
+  clearAuthCookies,
+} = require("../utils/authHelpers");
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-// -------------------------------------------------
-// COOKIE OPTIONS (MUST MATCH middleware)
-// -------------------------------------------------
-const isProduction = process.env.NODE_ENV === 'production';
-
-const COOKIE_OPTS = {
-  httpOnly: true,
-  secure: true, // Secure in Prod, Not in Dev
-  sameSite: "none", // None for Cross-Site Prod, Lax for Local
-  path: "/"
-};
-
-
-
-const hashToken = (token) =>
-  crypto.createHash("sha256").update(token).digest("hex");
-
-const createAccessToken = (userId, email, version) =>
-  jwt.sign({ userId, email, tokenVersion: version }, process.env.JWT_SECRET, {
-    expiresIn: "15m",
-  });
-
-const createRefreshToken = (userId, email, version) =>
-  jwt.sign(
-    { userId, email, tokenVersion: version },
-    process.env.JWT_REFRESH_SECRET,
-    { expiresIn: "30d" }
-  );
-
-const setAuthCookies = (res, access, refresh) => {
-  res.cookie("accessToken", access, {
-    ...COOKIE_OPTS,
-    maxAge: 15 * 60 * 1000,
-  });
-
-  res.cookie("refreshToken", refresh, {
-    ...COOKIE_OPTS,
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-  });
-};
-
-const clearAuthCookies = (res) => {
-  res.clearCookie("accessToken", {
-    httpOnly: true,
-    sameSite: "none",
-    secure: true,
-    path: "/",
-  });
-
-  res.clearCookie("refreshToken", {
-    httpOnly: true,
-    sameSite: "none",
-    secure: true,
-    path: "/",
-  });
-
-  // Clear trial cookie too
-  res.clearCookie("trialAccess", {
-    httpOnly: true,
-    sameSite: "none",
-    secure: true,
-    path: "/",
-  });
-};
-
 
 const createSession = async (req, user, refreshToken) => {
   const hashed = hashToken(refreshToken);
@@ -90,7 +31,9 @@ const createSession = async (req, user, refreshToken) => {
 // EMAIL TRANSPORT
 // -------------------------------------------------
 const mailer = nodemailer.createTransport({
-  service: "gmail",
+  host: process.env.SMTP_HOST || "smtp.gmail.com",
+  port: parseInt(process.env.SMTP_PORT || "587"),
+  secure: process.env.SMTP_PORT === "465",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD,
@@ -172,6 +115,7 @@ exports.sendSignupOtp = async (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
+    console.error("Failed to send signup OTP:", err);
     res.status(500).json({ message: "Failed to send OTP" });
   }
 };
@@ -181,7 +125,7 @@ exports.sendSignupOtp = async (req, res) => {
 // -----------------------------------------------------
 exports.signup = async (req, res) => {
   try {
-    const { email, password, name, otp } = req.body;
+    const { email, password, name, otp, rememberMe } = req.body;
     const normalized = email.toLowerCase().trim();
 
     const entry = signupOtpStore.get(normalized);
@@ -212,24 +156,26 @@ exports.signup = async (req, res) => {
     const refresh = createRefreshToken(
       user.id,
       user.email,
-      user.token_version
+      user.token_version,
+      rememberMe
     );
 
     await createSession(req, user, refresh);
-    setAuthCookies(res, access, refresh);
+    setAuthCookies(res, access, refresh, rememberMe);
 
     res.json({ user: formatUser(user) });
   } catch (err) {
+    console.error("Signup failed:", err);
     res.status(500).json({ message: "Signup failed" });
   }
 };
 
-// -----------------------------------------------------
+// // -----------------------------------------------------
 // LOGIN
 // -----------------------------------------------------
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
 
     const normalized = email.toLowerCase().trim();
 
@@ -249,14 +195,16 @@ exports.login = async (req, res) => {
     const refresh = createRefreshToken(
       user.id,
       user.email,
-      user.token_version
+      user.token_version,
+      !!rememberMe
     );
 
     await createSession(req, user, refresh);
-    setAuthCookies(res, access, refresh);
+    setAuthCookies(res, access, refresh, !!rememberMe);
 
     res.json({ user: formatUser(user) });
   } catch (err) {
+    console.error("Login failed:", err);
     res.status(500).json({ message: "Login failed" });
   }
 };
@@ -266,7 +214,7 @@ exports.login = async (req, res) => {
 // -----------------------------------------------------
 exports.googleLogin = async (req, res) => {
   try {
-    const { credentials } = req.body;
+    const { credentials, rememberMe } = req.body;
 
     const ticket = await googleClient.verifyIdToken({
       idToken: credentials,
@@ -302,14 +250,16 @@ exports.googleLogin = async (req, res) => {
     const refresh = createRefreshToken(
       user.id,
       user.email,
-      user.token_version
+      user.token_version,
+      rememberMe !== false // Default Google login to true/remembered
     );
 
     await createSession(req, user, refresh);
-    setAuthCookies(res, access, refresh);
+    setAuthCookies(res, access, refresh, rememberMe !== false);
 
     res.json({ user: formatUser(user) });
   } catch (err) {
+    console.error("Google login failed:", err);
     res.status(401).json({ message: "Invalid Google token" });
   }
 };
@@ -368,10 +318,14 @@ exports.sendResetOtp = async (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
+    console.error("Failed to send reset OTP:", err);
     res.status(500).json({ message: "Failed to send reset OTP" });
   }
 };
 
+// -----------------------------------------------------
+// RESET PASSWORD
+// -----------------------------------------------------
 // -----------------------------------------------------
 // RESET PASSWORD
 // -----------------------------------------------------
@@ -396,9 +350,19 @@ exports.resetPassword = async (req, res) => {
 
     const newHash = await bcrypt.hash(newPassword, 10);
 
+    // 1. Fetch current token_version to increment it
+    const { data: currentUsr } = await supabase
+      .from("users")
+      .select("id, token_version")
+      .eq("email", normalized)
+      .single();
+
+    const newVersion = (currentUsr?.token_version || 1) + 1;
+
+    // 2. Update password hash AND increment token version
     const { data: user } = await supabase
       .from("users")
-      .update({ password_hash: newHash })
+      .update({ password_hash: newHash, token_version: newVersion })
       .eq("email", normalized)
       .select("id")
       .single();
@@ -408,9 +372,11 @@ exports.resetPassword = async (req, res) => {
 
     res.json({ success: true, message: "Password reset successful" });
   } catch (err) {
+    console.error("Password reset failed:", err);
     res.status(500).json({ message: "Reset failed" });
   }
 };
+
 exports.refresh = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
@@ -425,7 +391,7 @@ exports.refresh = async (req, res) => {
       return res.status(401).json({ message: "Invalid refresh token" });
     }
 
-    const { userId, email, tokenVersion } = payload;
+    const { userId, email, tokenVersion, rememberMe } = payload;
 
     // 2. Hash token and check it exists in sessions
     const hashed = hashToken(refreshToken);
@@ -458,7 +424,7 @@ exports.refresh = async (req, res) => {
 
     // 4. Rotate refresh token (With Grace Period)
     const newAccess = createAccessToken(user.id, user.email, user.token_version);
-    const newRefresh = createRefreshToken(user.id, user.email, user.token_version);
+    const newRefresh = createRefreshToken(user.id, user.email, user.token_version, !!rememberMe);
     const newHash = hashToken(newRefresh);
 
     // Create NEW session
@@ -481,7 +447,7 @@ exports.refresh = async (req, res) => {
     }, 10000); // 10 seconds grace period
 
     // 5. Set new cookies
-    setAuthCookies(res, newAccess, newRefresh);
+    setAuthCookies(res, newAccess, newRefresh, !!rememberMe);
 
     return res.json({
       success: true,
