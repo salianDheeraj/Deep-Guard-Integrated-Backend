@@ -1,0 +1,29 @@
+name: Repository Heartbeat
+
+on:
+  schedule:
+    # Runs at 03:17 on the 1st of every month (UTC).
+    # Using an offset helps avoid peak traffic times.
+    - cron: '17 3 1 * *'
+  workflow_dispatch:
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Update Heartbeat
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          mkdir -p .github
+          echo "Last heartbeat: $(date -u '+%Y-%m-%dT%H:%M:%SZ')" > .github/heartbeat.txt
+
+          git add .github/heartbeat.txt
+          git commit -m "chore: repository heartbeat [skip ci]" || exit 0
+          git push origin HEAD
