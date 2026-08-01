@@ -30,7 +30,7 @@ app.set("trust proxy",1)
 const allowedOrigins = [
   "http://localhost:3000",                        // Local Development
   "https://deep-guard-frontend-omega.vercel.app", // Production Frontend
-  "https://deepguard.dheerajsalian.dev/"          // Personal Domain
+  "https://deepguard.dheerajsalian.dev"          // Personal Domain
 ];
 
 app.use(
