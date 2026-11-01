@@ -1,7 +1,9 @@
 FROM python:3.10-slim
 
 ENV PYTHONUNBUFFERED=1 \
-    NODE_ENV=production
+    NODE_ENV=production \
+    PIP_DEFAULT_TIMEOUT=120 \
+    PIP_RETRIES=5
 
 # 1️⃣ UPDATE: Added 'wget' to the list of installed packages
 RUN apt-get update && \
@@ -13,9 +15,12 @@ RUN apt-get update && \
 
 WORKDIR /usr/src/app
 
-# Install ML dependencies
+# Upgrade pip to latest version with improved resolver & network retry handling
+RUN pip install --no-cache-dir --upgrade pip
+
+# Install ML dependencies with extended network timeout and retries
 COPY app/Deep-Guard-ML-Engine/requirements.txt ./ml-requirements.txt
-RUN pip install --no-cache-dir -r ml-requirements.txt
+RUN pip install --no-cache-dir --default-timeout=120 --retries 5 -r ml-requirements.txt
 
 # 2️⃣ NEW: Download the lightweight YuNet Model
 # We do this here so it stays cached even if you change your app code later.
