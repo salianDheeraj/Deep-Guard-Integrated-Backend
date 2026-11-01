@@ -1,7 +1,7 @@
 services:
   deep-guard-backend:
     build:
-      context: ./Deep-Guard-Backend
+      context: ./app/Deep-Guard-Backend
       dockerfile: Dockerfile
     ports:
       - "5000:5000"
@@ -33,7 +33,7 @@ services:
 
   deep-guard-ml-engine:
     build:
-      context: ./Deep-Guard-ML-Engine
+      context: ./app/Deep-Guard-ML-Engine
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
